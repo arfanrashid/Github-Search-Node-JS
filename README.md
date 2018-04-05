@@ -1,1 +1,1 @@
-# gitHub-search
+# GitHub Search API in Node
