@@ -1,3 +1,4 @@
+import { GetProjectsResult,Subscriber } from '../api';
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -11,6 +12,10 @@ import {
 } from 'reactstrap';
 
 import './List.css';
+import io from 'socket.io-client';
+const  socket = io.connect('http://localhost:3001');
+
+//const socket =  io.connect("http://localhost:3001",{secure:true});
 
 class List extends Component {  constructor(props) {
     super(props);
@@ -19,29 +24,44 @@ class List extends Component {  constructor(props) {
       loading: false,
       error: null,
     };
+    
+    
+    Subscriber((data) => 
+    {
+      console.log('Projects -- Updated: '+JSON.stringify(data));
+     
+      this.setState(
+        {
+          projects:data.projects
+        });
+      
+    });
+
+    socket.on('ProjectsUpdated', (data) =>
+    { 
+        console.log("Listing from server");
+        console.log('Projects -- Updated: '+JSON.stringify(data));
+        
+         this.setState(
+           {
+             projects:data.projects
+           });
+         
+    });
+    // socket.on('ProjectsUpdated', (data) => 
+    // {
+    //   console.log('Projects -- Updated: '+JSON.stringify(data));
+     
+    //   this.setState(
+    //     {
+    //       projects:data.projects
+    //     });
+      
+    // });
+   
   }
-sort(ev){
-var list= this.state.data.projects;
-if(ev.target.value==='date')
-this.setState({
-  data:{projects: this.sortByKey(list, 'created')}
-});
-
-else
-this.setState({
-  data:{projects: this.sortByKey(list, 'upvotes')}
-});
-
-}
-
- sortByKey(array, key) 
- {
-  return array.sort(function(a, b) {
-      var x = a[key]; var y = b[key];
-      return ((x < y) ? 1 : ((x > y) ? -1 : 0));
-  });
-}
-
+  
+  
 
   async fetch() {
     try {
@@ -87,7 +107,7 @@ this.setState({
     this.setState({
       loading: true,
     }, async () => {
-      let result = await fetch('/api/projects/', {
+      var params={
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -96,7 +116,9 @@ this.setState({
            language: this.state.searchQuery,
           
         }),
-      });
+      };
+      GetProjectsResult(params);
+      let result = await fetch('/api/projects/',params);
       if(result.status !== 200) {
         this.setState({
           loading: false,

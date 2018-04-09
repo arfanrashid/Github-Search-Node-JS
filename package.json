@@ -8,7 +8,7 @@
     "start-react": "react-scripts start",
     "start-server": "node server",
     "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "test": "mocha",
     "eject": "react-scripts eject"
   },
   "keywords": [
@@ -19,6 +19,8 @@
   "author": "Arfan Rashid",
   "license": "MIT",
   "dependencies": {
+    "async": "^2.6.0",
+    "asynch": "^0.5.2",
     "bootstrap": "^4.0.0",
     "create-react-app": "^1.5.2",
     "koa": "^2.5.0",
@@ -31,6 +33,8 @@
     "react-scripts": "^1.1.4",
     "reactstrap": "^5.0.0",
     "request": "^2.85.0",
+    "socket.io": "^2.1.0",
+    "socket.io-client": "^2.1.0",
     "underscore": "^1.8.3",
     "wait-for-stuff": "^1.4.0"
   },
@@ -40,5 +44,9 @@
       "changeOrigin": true,
       "ws": true
     }
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^5.0.5"
   }
 }

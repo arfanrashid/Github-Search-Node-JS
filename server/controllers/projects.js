@@ -1,6 +1,27 @@
-var wait = require('wait-for-stuff');
-
+const io = require('socket.io')();
 SearchGithub= require("../modules/githubsearch");
+
+io.on('connection', (client) => 
+{
+  console.log("client connected");
+});
+
+io.on('GetProjectsResult', (params) => 
+{
+  console.log('Client is asking results for language ');
+
+  github.searchProjects(params, function(data)
+  {
+            console.log('Emitting the results');
+
+            var result = {succes:true, projects:data};
+            
+            io.emit('ProjectsUpdated',  result);
+
+  });
+
+});
+
 module.exports.all = async function(ctx) {
 var projects = {items:[]};
   ctx.body = {
@@ -13,15 +34,17 @@ module.exports.search = async function(ctx) {
     var params = ctx.request.body;
     	
 	var github = new SearchGithub({username: 'info.arfan.rashid@gmail.com', password: '@Password1'});
-var body={};
-   github.searchProjects(params,    function(data){
 
-    body = { succes: true, projects:data};
-  });
- 
-  wait.for.value(body, 'succes','true');
-  console.log(body);
-  ctx.body=body;
+github.searchProjects(params, function(data)
+{
+          console.log('Emitting the results');
+
+          var result = {succes:true, projects:data};
+          
+          io.emit('ProjectsUpdated',  result);
+
+});
+ ctx.body = {succes:true, projects:{items:[]}};
   } catch(e) {
    throw e;
       ctx.body = {

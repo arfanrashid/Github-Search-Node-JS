@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { GetProjectsResult } from './api';
 import {
   BrowserRouter as Router,
   Route,

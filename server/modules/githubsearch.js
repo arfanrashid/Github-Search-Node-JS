@@ -1,5 +1,6 @@
 // index.js
 'use strict';
+var async = require("async");
 // Helper Functions ParseQueryString
 //Added reuired dependencies
 var request = require('request'),
@@ -98,7 +99,7 @@ function addResultParameters(params, url) {
         };
     }
     // method to query projects
-    SearchGithub.prototype.searchProjects = function(params, callback) {
+    SearchGithub.prototype.searchProjects = async function(params, callback) {
         // throw error if the callback is not a function
         if (typeof callback !== 'function') {
             throw new Error('Callback must be a function!');
